@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+    <style>
+    .container {
+        max-width: 500px;
+    }
+    .logo-space {
+        text-align: center;
+        padding: 50px 0;
+        background-color: #bada55;
+        margin: 10px 0;
+    }
+    </style>
+</head>
+<body>
+    <div id="app">
+
+        <div class="container">
+            <div class="logo-space">
+                <h1>Live Commentary</h1>
+            </div>
+            <div class="alert alert-success" role="alert" v-show="successfulPost">
+                Post added successfully!
+            </div>
+            <form action="/posts" method="POST" id="post-stuff" v-on:submit.prevent="submitForm">
+                <div class="form-group">
+                    <textarea class="form-control" v-model="content" placeholder="Enter Post"></textarea>
+                </div>
+                <input type="submit" class="form-control btn btn-primary" name="submit" value="Update Stream">
+            </form>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+    <script>
+    new Vue({
+        el: "#app",
+        data: {
+            content: "",
+            successfulPost: false
+        },
+        methods: {
+            submitForm() {
+                if (this.content.length > 0 && this.content !== "") {
+                    let data = new FormData()
+                    data.append("content", this.content)
+                    axios.post("/posts", data).then(res => {
+                        this.content = ""
+                        this.successfulPost = true
+                        setTimeout(() => this.successfulPost = false, 3000)
+                    })
+                }
+            }
+        }
+    })
+    </script>
+</body>
+</html>
